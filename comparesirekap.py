@@ -1,0 +1,94 @@
+import json
+import requests
+import pandas as pd
+import numpy as np
+import streamlit as st
+
+def compare(id):
+    #get data from api kawalpemilu.org
+    data = requests.get("https://kp24-fd486.et.r.appspot.com/h?id="+str(id)).json()
+
+    aggregated_data = data["result"]["aggregated"]
+
+    dfs = []
+    for key, values in aggregated_data.items():
+        df = pd.DataFrame(values)
+        dfs.append(df)
+
+    df = pd.concat(dfs,ignore_index=True)
+
+    df = df[['idLokasi', 'pas1', 'pas2', 'pas3', 'dpt', 'name']].drop_duplicates(keep='last')
+    df['status'] = np.where((df['pas1'] == 0) & (df['pas2'] == 0) & (df['pas3'] == 0), 0, 1)
+    df['idLokasi'] = id*1000 + df['name'].astype(int)
+    df['idLokasi'] = df['idLokasi'].astype(str)
+    kawalpemilu = df
+
+    #get data from api sirekap kpu
+    data = requests.get("https://sirekap-obj-data.kpu.go.id/pemilu/hhcw/ppwp/"+str(id)[0:2]+"/"+str(id)[0:4]+"/"+str(id)[0:6]+"/"+str(id)+".json").json()
+    rows = []
+
+    for id_, values in data['table'].items():
+        row = {
+            'id': id_,
+            'psu': values['psu'],
+            'persen': values['persen'],
+            'status_progress': values['status_progress']
+        }
+
+        if '100025' in values:
+            row['100025'] = int(values['100025'])
+        if '100026' in values:
+            row['100026'] = int(values['100026'])
+        if '100027' in values:
+            row['100027'] = int(values['100027'])
+        rows.append(row)
+
+    df = pd.DataFrame(rows)
+
+    df['id'] = df['id'].astype(str)
+    df = df.rename(columns={'100025':'pas1','100026':'pas2','100027':'pas3'})
+    df = df[['id','pas1','pas2','pas3']].fillna(0)
+    df['pas1'] = df['pas1'].astype(int)
+    df['pas2'] = df['pas2'].astype(int)
+    df['pas3'] = df['pas3'].astype(int)
+    df['status'] = np.where((df['pas1'] == 0) & (df['pas2'] == 0) & (df['pas3'] == 0), 0, 1)
+    kpu = df
+
+    #merge data sirekap kpu with kawalpemilu.org
+    compared = pd.merge(kawalpemilu, kpu, left_on='idLokasi', right_on='id', how='inner')
+    compared.columns = ['idLokasi', 'pas1_kawal', 'pas2_kawal', 'pas3_kawal', 'dpt', 'name', 'status_kawal',
+           'id', 'pas1_kpu', 'pas2_kpu', 'pas3_kpu', 'status_kpu']
+    compared = compared[['id','dpt','pas1_kawal', 'pas2_kawal', 'pas3_kawal','status_kawal','pas1_kpu', 'pas2_kpu', 'pas3_kpu', 'status_kpu']]
+
+    #compare sirekap kpu with kawalpemilu.org
+    def check(row):
+        if row['status_kawal'] == 1 and row['status_kpu'] == 1:
+            if row['pas1_kawal'] == row['pas1_kpu'] and row['pas2_kawal'] == row['pas2_kpu'] and row['pas3_kawal'] == row['pas3_kpu']:
+                return 'sesuai' #detect ketidaksesuaian dengan kawalpemilu
+            elif row['pas1_kpu'] + row['pas2_kpu'] + row['pas3_kpu'] > row['dpt']*1.02 or row['pas1_kawal'] + row['pas2_kawal'] + row['pas3_kawal'] > row['dpt']*1.02:
+                return 'markup' #detect markup suara
+            else: return 'tidak sesuai' #detect ketidaksesuaian dengan kawalpemilu
+        elif row['pas1_kpu'] + row['pas2_kpu'] + row['pas3_kpu'] > row['dpt']*1.02 or row['pas1_kawal'] + row['pas2_kawal'] + row['pas3_kawal'] > row['dpt']*1.02:
+            return 'markup' #detect markup suara
+        else: 
+            return 'belum dikawal' #detect tps belum dikawal/data belum ada di kawalpemilu
+    compared['check'] = compared.apply(check, axis=1)
+    return compared
+
+# Fungsi untuk menambahkan warna baris berdasarkan kondisi
+def row_color(row):
+    color = '8DE3D1' if row['check'] == 'sesuai' else '#EC7063' if row['check'] == 'markup' or row['check'] == 'tidak sesuai' else '#e3e3e3'
+    return [f'background-color: {color}'] * len(row)
+
+tps = pd.read_json("tps2.json",dtype=False)
+
+st.header("Sirekap KPU vs KawalPemilu.org")
+st.markdown("Dokumentasi: [**github.com/rezkyyayang/kawalpemilu**](https://github.com/rezkyyayang/kawalpemilu)")
+# Menggunakan st.text_input() untuk memasukkan teks
+id = st.text_input("**Masukkan 10 digit ID Desa/Kel:** ",3171011001)
+st.markdown(f"""**PROVINSI:** {tps.loc[int(str(id)[0:2]),'id2name']} \n **KAB/KOTA:** {tps.loc[int(str(id)[0:4]),'id2name']} \n **KECAMATAN:** {tps.loc[int(str(id)[0:6]),'id2name']} \n **DESA/KEL:** {tps.loc[int(id),'id2name']}""")
+id = int(id)
+# Menampilkan dataframe
+df = compare(id)
+df = df.style.apply(row_color, axis=1)
+st.write(df)
