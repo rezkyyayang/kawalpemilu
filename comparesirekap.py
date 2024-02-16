@@ -112,7 +112,12 @@ id_desa = tps[(tps.index.astype(str).str.len() == 10) & (tps['id2name'] == nm_de
 
 # Menggunakan st.text_input() untuk memasukkan teks
 id = st.text_input("**Masukkan 10 digit ID Desa/Kel:** ",id_desa)
-st.markdown(f"""**PROVINSI:** {tps.loc[int(str(id)[0:2]),'id2name']} \n **KAB/KOTA:** {tps.loc[int(str(id)[0:4]),'id2name']} \n **KECAMATAN:** {tps.loc[int(str(id)[0:6]),'id2name']} \n **DESA/KEL:** {tps.loc[int(id),'id2name']}""")
+st.write(f"""
+        <b>PROVINSI:</b> {tps.loc[int(str(id)[0:2]),'id2name']} | 
+        <b>KAB/KOTA:</b> {tps.loc[int(str(id)[0:4]),'id2name']} <br>
+        <b>KECAMATAN:</b> {tps.loc[int(str(id)[0:6]),'id2name']} | 
+        <b>DESA/KEL:</b> {tps.loc[int(id),'id2name']}
+        """, unsafe_allow_html=True)
 id = int(id)
 # Menampilkan dataframe
 df = compare(id)
