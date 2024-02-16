@@ -1,5 +1,5 @@
 # Sirekap KPU vs KawalPemilu.org
-Merupakan aplikasi sederhana yang dibuat dengan Python untuk membantu mempermudah mendeteksi kesalahan perhitungan suara pada Pemilihan Umum Presiden dan Wakil Presiden 2024. Akses melalui [**pemilu.streamlit.io**](https://pemilu.streamlit.io)
+Merupakan aplikasi sederhana yang dibuat dengan Python untuk membantu mempermudah mendeteksi kesalahan perhitungan suara pada Pemilihan Umum Presiden dan Wakil Presiden 2024. Akses melalui [**pemilu.streamlit.app**](https://pemilu.streamlit.app)
 
 <img src="https://github.com/rezkyyayang/kawalpemilu/assets/60925883/ced249ff-a867-4c47-8392-01c369fd9d1c" width="512px">
 
