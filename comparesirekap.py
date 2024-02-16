@@ -37,10 +37,13 @@ def compare(id):
 
         if '100025' in values:
             row['100025'] = int(values['100025'])
+        else: row['100025'] = 0
         if '100026' in values:
             row['100026'] = int(values['100026'])
+        else: row['100026'] = 0  
         if '100027' in values:
             row['100027'] = int(values['100027'])
+        else: row['100027'] = 0
         rows.append(row)
 
     df = pd.DataFrame(rows)
@@ -84,8 +87,31 @@ tps = pd.read_json("tps2.json",dtype=False)
 
 st.header("Sirekap KPU vs KawalPemilu.org")
 st.markdown("Dokumentasi: [**github.com/rezkyyayang/kawalpemilu**](https://github.com/rezkyyayang/kawalpemilu)")
+
+c1, c2, c3, c4 = st.columns(4)
+
+#Dropdown options PROVINSI
+opsi_prov = tps[tps.index.astype(str).str.len() == 2]['id2name']
+nm_prov = c1.selectbox('Pilih Provinsi:', opsi_prov)
+id_prov = tps[tps['id2name'] == nm_prov].index[0]
+
+#Dropdown options KABUPATEN/KOTA
+opsi_kab = tps[(tps.index.astype(str).str.len() == 4) & (tps.index.astype(str).str.startswith(str(id_prov)))]['id2name']
+nm_kab = c2.selectbox('Pilih Kabupaten/Kota:', opsi_kab)
+id_kab = tps[tps['id2name'] == nm_kab].index[0]
+
+#Dropdown options KECAMATAN
+opsi_kec = tps[(tps.index.astype(str).str.len() == 6) & (tps.index.astype(str).str.startswith(str(id_kab)))]['id2name']
+nm_kec = c3.selectbox('Pilih Kecamatan:', opsi_kec)
+id_kec = tps[tps['id2name'] == nm_kec].index[0]
+
+#Dropdown options DESA/KELURAHAN
+opsi_desa = tps[(tps.index.astype(str).str.len() == 10) & (tps.index.astype(str).str.startswith(str(id_kec)))]['id2name']
+nm_desa = c4.selectbox('Pilih Desa/Kelurahan:', opsi_desa)
+id_desa = tps[(tps.index.astype(str).str.len() == 10) & (tps['id2name'] == nm_desa)].index[0]
+
 # Menggunakan st.text_input() untuk memasukkan teks
-id = st.text_input("**Masukkan 10 digit ID Desa/Kel:** ",3171011001)
+id = st.text_input("**Masukkan 10 digit ID Desa/Kel:** ",id_desa)
 st.markdown(f"""**PROVINSI:** {tps.loc[int(str(id)[0:2]),'id2name']} \n **KAB/KOTA:** {tps.loc[int(str(id)[0:4]),'id2name']} \n **KECAMATAN:** {tps.loc[int(str(id)[0:6]),'id2name']} \n **DESA/KEL:** {tps.loc[int(id),'id2name']}""")
 id = int(id)
 # Menampilkan dataframe
