@@ -112,11 +112,14 @@ opsi_desa = tps[(tps.index.astype(str).str.len() == 10) & (tps.index.astype(str)
 nm_desa = c4.selectbox('Pilih Desa/Kelurahan:', opsi_desa)
 id_desa = tps[(tps.index.astype(str).str.len() == 10) & (tps['id2name'] == nm_desa)].index[0]
 
-# Menggunakan st.text_input() untuk memasukkan teks
+#Input manual ID Desa/Kelurahan
 id = st.text_input("**Masukkan 10 digit ID Desa/Kel:** ",id_desa)
-st.write(f"""<a class="st-emotion-cache-7ym5gk ef3psqc12" style="text-decoration: none;" href="https://pemilu2024.kpu.go.id/pilpres/hitung-suara/{str(id)[0:2]+"/"+str(id)[0:4]+"/"+str(id)[0:6]+"/"+str(id)}" target="_blank">SIREKAP KPU</a>
-             <a class="st-emotion-cache-7ym5gk ef3psqc12" style="text-decoration: none;" href="https://kawalpemilu.org/h/{str(id)}" target="_blank">KAWAL PEMILU</a>
-              | <b>  PROVINSI:</b> {tps.loc[int(str(id)[0:2]),'id2name']} | 
+
+#Button menuju web Sirekap dan KawalPemilu
+c5, c6, c7 = st.columns([1,1,6])
+c5.link_button("SIREKAP KPU", "https://pemilu2024.kpu.go.id/pilpres/hitung-suara/"+str(id)[0:2]+"/"+str(id)[0:4]+"/"+str(id)[0:6]+"/"+str(id),use_container_width = True)
+c6.link_button("KAWAL PEMILU", "https://kawalpemilu.org/h/"+str(id),use_container_width = True)
+c7.write(f"""<b>  PROVINSI:</b> {tps.loc[int(str(id)[0:2]),'id2name']} | 
              <b>  KAB/KOTA:</b> {tps.loc[int(str(id)[0:4]),'id2name']} |
              <b>  KECAMATAN:</b> {tps.loc[int(str(id)[0:6]),'id2name']} | 
              <b>  DESA/KEL:</b> {tps.loc[int(id),'id2name']}
