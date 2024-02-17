@@ -117,8 +117,8 @@ id = st.text_input("**Masukkan 10 digit ID Desa/Kel:** ",id_desa)
 
 #Button menuju web Sirekap dan KawalPemilu
 c5, c6, c7 = st.columns([1,1,6])
-c5.link_button("SIREKAP KPU", "https://pemilu2024.kpu.go.id/pilpres/hitung-suara/"+str(id)[0:2]+"/"+str(id)[0:4]+"/"+str(id)[0:6]+"/"+str(id),use_container_width = True)
-c6.link_button("KAWAL PEMILU", "https://kawalpemilu.org/h/"+str(id),use_container_width = True)
+c5.link_button("🗳️ SIREKAP KPU", "https://pemilu2024.kpu.go.id/pilpres/hitung-suara/"+str(id)[0:2]+"/"+str(id)[0:4]+"/"+str(id)[0:6]+"/"+str(id),use_container_width = True)
+c6.link_button("🔢 KAWAL PEMILU", "https://kawalpemilu.org/h/"+str(id),use_container_width = True)
 c7.write(f"""<b>  PROVINSI:</b> {tps.loc[int(str(id)[0:2]),'id2name']} | 
              <b>  KAB/KOTA:</b> {tps.loc[int(str(id)[0:4]),'id2name']} |
              <b>  KECAMATAN:</b> {tps.loc[int(str(id)[0:6]),'id2name']} | 
