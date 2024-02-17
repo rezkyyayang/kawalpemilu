@@ -17,7 +17,7 @@ def compare(id):
 
     df = pd.concat(dfs,ignore_index=True)
 
-    df = df[['idLokasi', 'pas1', 'pas2', 'pas3', 'dpt', 'name']].drop_duplicates(keep='last')
+    df = df[['idLokasi', 'pas1', 'pas2', 'pas3', 'dpt', 'name']].drop_duplicates(subset=['idLokasi'],keep='first')
     df['status'] = np.where((df['pas1'] == 0) & (df['pas2'] == 0) & (df['pas3'] == 0), 0, 1)
     df['idLokasi'] = id*1000 + df['name'].astype(int)
     df['idLokasi'] = df['idLokasi'].astype(str)
