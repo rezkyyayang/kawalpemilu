@@ -128,4 +128,4 @@ id = int(id)
 # Menampilkan dataframe
 df = compare(id)
 df = df.style.apply(row_color, axis=1)
-st.dataframe(df)
+st.dataframe(df, use_container_width = True)
