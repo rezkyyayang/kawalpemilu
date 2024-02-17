@@ -98,22 +98,22 @@ with tab1:
     #Dropdown options PROVINSI
     opsi_prov = tps[tps.index.astype(str).str.len() == 2]['id2name']
     nm_prov = c1.selectbox('Pilih Provinsi:', opsi_prov)
-    id_prov = tps[tps['id2name'] == nm_prov].index[0]
+    id_prov = tps[(tps.index.astype(str).str.len() == 2) & (tps['id2name'] == nm_prov)].index[0]
 
     #Dropdown options KABUPATEN/KOTA
     opsi_kab = tps[(tps.index.astype(str).str.len() == 4) & (tps.index.astype(str).str.startswith(str(id_prov)))]['id2name']
-    nm_kab = c2.selectbox('Pilih Kabupaten/Kota:', opsi_kab) 
-    id_kab = tps[tps['id2name'] == nm_kab].index[0]
+    nm_kab = c2.selectbox('Pilih Kabupaten/Kota:', opsi_kab)
+    id_kab = tps[(tps.index.astype(str).str.len() == 4) & (tps.index.astype(str).str.startswith(str(id_prov))) & (tps['id2name'] == nm_kab)].index[0]
 
     #Dropdown options KECAMATAN
     opsi_kec = tps[(tps.index.astype(str).str.len() == 6) & (tps.index.astype(str).str.startswith(str(id_kab)))]['id2name']
     nm_kec = c3.selectbox('Pilih Kecamatan:', opsi_kec)
-    id_kec = tps[tps['id2name'] == nm_kec].index[0]
+    id_kec = tps[(tps.index.astype(str).str.len() == 6) & (tps.index.astype(str).str.startswith(str(id_kab))) & (tps['id2name'] == nm_kec)].index[0]
 
     #Dropdown options DESA/KELURAHAN
     opsi_desa = tps[(tps.index.astype(str).str.len() == 10) & (tps.index.astype(str).str.startswith(str(id_kec)))]['id2name']
     nm_desa = c4.selectbox('Pilih Desa/Kelurahan:', opsi_desa)
-    id_desa = tps[(tps.index.astype(str).str.len() == 10) & (tps['id2name'] == nm_desa)].index[0]
+    id_desa = tps[(tps.index.astype(str).str.len() == 10) & (tps.index.astype(str).str.startswith(str(id_kec))) & (tps['id2name'] == nm_desa)].index[0]
 
     #Input manual ID Desa/Kelurahan
     id = st.text_input("**Masukkan 10 digit ID Desa/Kel:** ",id_desa)
