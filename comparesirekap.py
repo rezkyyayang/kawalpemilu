@@ -87,45 +87,112 @@ tps = pd.read_json("tps2.json",dtype=False)
 
 st.set_page_config(layout="wide")
 
-st.header("Sirekap KPU vs KawalPemilu.org")
-st.markdown("Dokumentasi: [**github.com/rezkyyayang/kawalpemilu**](https://github.com/rezkyyayang/kawalpemilu)")
+tab1, tab3 = st.tabs(["Suara TPS","Profil Paslon"])
 
-c1, c2, c3, c4 = st.columns(4)
+with tab1:
+    st.header("Sirekap KPU vs KawalPemilu.org")
+    st.markdown("Dokumentasi: [**github.com/rezkyyayang/kawalpemilu**](https://github.com/rezkyyayang/kawalpemilu)")
 
-#Dropdown options PROVINSI
-opsi_prov = tps[tps.index.astype(str).str.len() == 2]['id2name']
-nm_prov = c1.selectbox('Pilih Provinsi:', opsi_prov)
-id_prov = tps[tps['id2name'] == nm_prov].index[0]
+    c1, c2, c3, c4 = st.columns(4)
 
-#Dropdown options KABUPATEN/KOTA
-opsi_kab = tps[(tps.index.astype(str).str.len() == 4) & (tps.index.astype(str).str.startswith(str(id_prov)))]['id2name']
-nm_kab = c2.selectbox('Pilih Kabupaten/Kota:', opsi_kab)
-id_kab = tps[tps['id2name'] == nm_kab].index[0]
+    #Dropdown options PROVINSI
+    opsi_prov = tps[tps.index.astype(str).str.len() == 2]['id2name']
+    nm_prov = c1.selectbox('Pilih Provinsi:', opsi_prov)
+    id_prov = tps[tps['id2name'] == nm_prov].index[0]
 
-#Dropdown options KECAMATAN
-opsi_kec = tps[(tps.index.astype(str).str.len() == 6) & (tps.index.astype(str).str.startswith(str(id_kab)))]['id2name']
-nm_kec = c3.selectbox('Pilih Kecamatan:', opsi_kec)
-id_kec = tps[tps['id2name'] == nm_kec].index[0]
+    #Dropdown options KABUPATEN/KOTA
+    opsi_kab = tps[(tps.index.astype(str).str.len() == 4) & (tps.index.astype(str).str.startswith(str(id_prov)))]['id2name']
+    nm_kab = c2.selectbox('Pilih Kabupaten/Kota:', opsi_kab) 
+    id_kab = tps[tps['id2name'] == nm_kab].index[0]
 
-#Dropdown options DESA/KELURAHAN
-opsi_desa = tps[(tps.index.astype(str).str.len() == 10) & (tps.index.astype(str).str.startswith(str(id_kec)))]['id2name']
-nm_desa = c4.selectbox('Pilih Desa/Kelurahan:', opsi_desa)
-id_desa = tps[(tps.index.astype(str).str.len() == 10) & (tps['id2name'] == nm_desa)].index[0]
+    #Dropdown options KECAMATAN
+    opsi_kec = tps[(tps.index.astype(str).str.len() == 6) & (tps.index.astype(str).str.startswith(str(id_kab)))]['id2name']
+    nm_kec = c3.selectbox('Pilih Kecamatan:', opsi_kec)
+    id_kec = tps[tps['id2name'] == nm_kec].index[0]
 
-#Input manual ID Desa/Kelurahan
-id = st.text_input("**Masukkan 10 digit ID Desa/Kel:** ",id_desa)
+    #Dropdown options DESA/KELURAHAN
+    opsi_desa = tps[(tps.index.astype(str).str.len() == 10) & (tps.index.astype(str).str.startswith(str(id_kec)))]['id2name']
+    nm_desa = c4.selectbox('Pilih Desa/Kelurahan:', opsi_desa)
+    id_desa = tps[(tps.index.astype(str).str.len() == 10) & (tps['id2name'] == nm_desa)].index[0]
 
-#Button menuju web Sirekap dan KawalPemilu
-c5, c6, c7 = st.columns([1,1,6])
-c5.link_button("🗳️ SIREKAP KPU", "https://pemilu2024.kpu.go.id/pilpres/hitung-suara/"+str(id)[0:2]+"/"+str(id)[0:4]+"/"+str(id)[0:6]+"/"+str(id),use_container_width = True)
-c6.link_button("🔢 KAWAL PEMILU", "https://kawalpemilu.org/h/"+str(id),use_container_width = True)
-c7.write(f"""<b>  PROVINSI:</b> {tps.loc[int(str(id)[0:2]),'id2name']} | 
-             <b>  KAB/KOTA:</b> {tps.loc[int(str(id)[0:4]),'id2name']} |
-             <b>  KECAMATAN:</b> {tps.loc[int(str(id)[0:6]),'id2name']} | 
-             <b>  DESA/KEL:</b> {tps.loc[int(id),'id2name']}
-             """, unsafe_allow_html=True)
-id = int(id)
-# Menampilkan dataframe
-df = compare(id)
-df = df.style.apply(row_color, axis=1)
-st.dataframe(df, use_container_width = True)
+    #Input manual ID Desa/Kelurahan
+    id = st.text_input("**Masukkan 10 digit ID Desa/Kel:** ",id_desa)
+
+    #Button menuju web Sirekap dan KawalPemilu
+    c5, c6, c7 = st.columns([1,1,6])
+    c5.link_button("🗳️ SIREKAP KPU", "https://pemilu2024.kpu.go.id/pilpres/hitung-suara/"+str(id)[0:2]+"/"+str(id)[0:4]+"/"+str(id)[0:6]+"/"+str(id),use_container_width = True)
+    c6.link_button("🔢 KAWAL PEMILU", "https://kawalpemilu.org/h/"+str(id),use_container_width = True)
+    c7.write(f"""<b>  PROVINSI:</b> {tps.loc[int(str(id)[0:2]),'id2name']} | 
+                 <b>  KAB/KOTA:</b> {tps.loc[int(str(id)[0:4]),'id2name']} |
+                 <b>  KECAMATAN:</b> {tps.loc[int(str(id)[0:6]),'id2name']} | 
+                 <b>  DESA/KEL:</b> {tps.loc[int(id),'id2name']}
+                 """, unsafe_allow_html=True)
+    id = int(id)
+    # Menampilkan dataframe
+    df = compare(id)
+    df = df.style.apply(row_color, axis=1)
+    st.dataframe(df, use_container_width = True)
+
+
+with tab3:
+    st.header("Profil Pasangan Capres-Cawapres")
+    st.markdown("Dokumentasi: [**github.com/rezkyyayang/kawalpemilu**](https://github.com/rezkyyayang/kawalpemilu)")
+
+    c8, c9, c10 = st.columns(3)
+
+    with c8:
+        st.header("01")
+        st.image("https://asset.kompas.com/data/2023/10/25/kompascom/widget/bacapres/images/paslon/Anies-Muhaimin.png")
+        st.subheader("H. ANIES RASYID BASWEDAN, Ph.D. - Dr. (H.C.) H. A. MUHAIMIN ISKANDAR")
+        with st.expander("Lihat Visi Misi Paslon 01"):
+            st.write("<b>VISI</b> <br> Indonesia Adil Makmur Untuk Semua", unsafe_allow_html= True)
+            st.write("""<b>MISI</b> <br>
+                     1. Memastikan Ketersediaan Kebutuhan Pokok dan Biaya Hidup Murah melalui Kemandirian Pangan, Ketahanan Energi, dan Kedaulatan Air.
+                     <br> 2. Mengentaskan Kemiskinan dengan Memperluas Kesempatan Berusaha dan Menciptakan Lapangan Kerja, Mewujudkan Upah Berkeadilan, Menjamin Kemajuan Ekonomi Berbasis Kemandirian dan Pemerataan, serta Mendukung Korporasi Indonesia Berhasil di Negeri Sendiri dan Bertumbuh di Kancah Global.
+                     <br> 3. Mewujudkan Keadilan Ekologis Berkelanjutan untuk Generasi Mendatang.
+                     <br> 4. Membangun Kota dan Desa Berbasis Kawasan yang Manusiawi, Berkeadilan dan Saling Memajukan.
+                     <br> 5. Mewujudkan Manusia Indonesia yang Sehat, Cerdas, Produktif, Berakhlak, dan Berbudaya.
+                     <br> 6. Mewujudkan Keluarga Indonesia yang Sejahtera dan Bahagia sebagai Akar Kekuatan Bangsa.
+                     <br> 7. Memperkuat Sistem Pertahanan dan Keamanan Negara, serta Meningkatkan Peran dan Kepemimpinan Indonesia dalam Arena Politik Global untuk Mewujudkan Kepentingan Nasional dan Perdamaian Dunia.
+                     <br> 8. Memulihkan Kualitas Demokrasi, Menegakkan Hukum dan HAM, Memberantas Korupsi Tanpa Tebang Pilih, serta Menyelenggarakan Pemerintahan yang Berpihak pada Rakyat
+                     """, unsafe_allow_html= True)
+        st.link_button("📄 Unduh Visi Misi Lengkap", "https://drive.google.com/file/d/1BOfwwq9NHMwiGJIaeDOCoko5Y9HRwnkQ/view",use_container_width = True)
+        
+    
+    with c9:
+        st.header("02")
+        st.image("https://asset.kompas.com/data/2023/10/25/kompascom/widget/bacapres/images/paslon/Prabowo-Gibran.png")
+        st.subheader("H. PRABOWO SUBIANTO - GIBRAN RAKABUMING RAKA")
+        with st.expander("Lihat Visi Misi Paslon 02"):
+            st.write("<b>VISI</b> <br> Bersama Indonesia Maju Menuju Indonesia Emas 2045", unsafe_allow_html= True)
+            st.write("""<b>MISI</b> <br>
+                     1. Memperkokoh ideologi Pancasila, demokrasi, dan hak asasi manusia (HAM).
+                     <br> 2. Memantapkan sistem pertahanan keamanan negara dan mendorong kemandirian bangsa melalui swasembada pangan, energi, air, ekonomi syariah, ekonomi digital, ekonomi hijau, dan ekonomi biru.
+                     <br> 3. Melanjutkan pengembangan infrastruktur dan meningkatkan lapangan kerja yang berkualitas, mendorong kewirausahaan, mengembangkan industri kreatif serta mengembangkan agro-maritim industri di sentra produksi melalui peran aktif koperasi.
+                     <br> 4. Memperkuat pembangunan sumber daya manusia (SDM), sains, teknologi, pendidikan, kesehatan, prestasi olahraga, kesetaraan gender, serta penguatan peran perempuan, pemuda (generasi milenial dan generasi Z), dan penyandang disabilitas.
+                     <br> 5. Melanjutkan hilirisasi dan mengembangkan industri berbasis sumber daya alam untuk meningkatkan nilai tambah di dalam negeri.
+                     <br> 6. Membangun dari desa dan dari bawah untuk pertumbuhan ekonomi, pemerataan ekonomi, dan pemberantasan kemiskinan.
+                     <br> 7. Memperkuat reformasi politik, hukum, dan birokrasi, serta memperkuat pencegahan dan pemberantasan korupsi, narkoba, judi, dan penyelundupan.
+                     <br> 8. Memperkuat penyelarasan kehidupan yang harmonis dengan lingkungan, alam dan budaya, serta peningkatan toleransi antarumat beragama untuk mencapai masyarakat yang adil dan makmur.
+                     """, unsafe_allow_html= True)
+        st.link_button("📄 Unduh Visi Misi Lengkap", "https://drive.google.com/file/d/17UaC5XwNuplXe_riHNrB7jb1STHvRWg-/view?usp=sharing",use_container_width = True)
+        
+    
+    with c10:
+        st.header("03")
+        st.image("https://asset.kompas.com/data/2023/10/25/kompascom/widget/bacapres/images/paslon/Ganjar-Mahfud.png")
+        st.subheader("H. GANJAR PRANOWO, S.H., M.I.P. - Prof. Dr. H. M. MAHFUD MD")
+        with st.expander("Lihat Visi Misi Paslon 03"):
+            st.write("<b>VISI</b> <br> Gerak Cepat Menuju Indonesia Unggul", unsafe_allow_html= True)
+            st.write("""<b>MISI</b> <br>
+                     1. Manusia Indonesia yang sehat, terdidik, dan sejahtera
+                     <br> 2. Indonesia unggul dalam bidang inovasi dan teknologi
+                     <br> 3. Ekonomi yang tangguh dan berdikari
+                     <br> 4. Hilangnya kemiskinan dan ketimpangan antarwilayah dari akarnya
+                     <br> 5. Ekosistem digital yang mengutamakan akses internet cepat dan terjangkau
+                     <br> 6. Pembangunan ekonomi yang memperhatikan kelestarian lingkungan
+                     <br> 7. Demokrasi terjaga melalui pemberantasan korupsi dan pemerintahan inklusif berlandaskan supremasi hukum
+                     <br> 8. Indonesia bangsa terhormat di kancah internasional, serta pertahanan yang tangguh dan modern
+                     """, unsafe_allow_html= True)
+        st.link_button("📄 Unduh Visi Misi Lengkap", "https://drive.google.com/file/d/1ey8BwGJhDNcZXXSCkHgn621KdWRRbNWN/view?usp=sharing",use_container_width = True)
+    
