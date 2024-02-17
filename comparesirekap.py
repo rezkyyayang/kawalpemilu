@@ -114,12 +114,13 @@ id_desa = tps[(tps.index.astype(str).str.len() == 10) & (tps['id2name'] == nm_de
 
 # Menggunakan st.text_input() untuk memasukkan teks
 id = st.text_input("**Masukkan 10 digit ID Desa/Kel:** ",id_desa)
-st.write(f"""
-        <b>PROVINSI:</b> {tps.loc[int(str(id)[0:2]),'id2name']} | 
-        <b>KAB/KOTA:</b> {tps.loc[int(str(id)[0:4]),'id2name']} <br>
-        <b>KECAMATAN:</b> {tps.loc[int(str(id)[0:6]),'id2name']} | 
-        <b>DESA/KEL:</b> {tps.loc[int(id),'id2name']}
-        """, unsafe_allow_html=True)
+st.write(f"""<a class="st-emotion-cache-7ym5gk ef3psqc12" style="text-decoration: none;" href="https://pemilu2024.kpu.go.id/pilpres/hitung-suara/{str(id)[0:2]+"/"+str(id)[0:4]+"/"+str(id)[0:6]+"/"+str(id)}" target="_blank">SIREKAP KPU</a>
+             <a class="st-emotion-cache-7ym5gk ef3psqc12" style="text-decoration: none;" href="https://kawalpemilu.org/h/{str(id)}" target="_blank">KAWAL PEMILU</a>
+              | <b>  PROVINSI:</b> {tps.loc[int(str(id)[0:2]),'id2name']} | 
+             <b>  KAB/KOTA:</b> {tps.loc[int(str(id)[0:4]),'id2name']} |
+             <b>  KECAMATAN:</b> {tps.loc[int(str(id)[0:6]),'id2name']} | 
+             <b>  DESA/KEL:</b> {tps.loc[int(id),'id2name']}
+             """, unsafe_allow_html=True)
 id = int(id)
 # Menampilkan dataframe
 df = compare(id)
