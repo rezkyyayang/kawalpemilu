@@ -85,6 +85,8 @@ def row_color(row):
 
 tps = pd.read_json("tps2.json",dtype=False)
 
+st.set_page_config(layout="wide")
+
 st.header("Sirekap KPU vs KawalPemilu.org")
 st.markdown("Dokumentasi: [**github.com/rezkyyayang/kawalpemilu**](https://github.com/rezkyyayang/kawalpemilu)")
 
