@@ -236,7 +236,7 @@ with tab2:
         st.subheader('Suara Provinsi:')
         x1, x2, x3 = st.columns([1,1,6])
         x1.link_button("🗳️ SIREKAP KPU", "https://pemilu2024.kpu.go.id/pilpres/hitung-suara/"+str(id_wil)[0:2],use_container_width = True)
-        x2.link_button("🔢 KAWAL PEMILU", "https://kawalpemilu.org/h/"+str(id_wil),use_container_width = True)
+        x2.link_button("🔢 KAWAL PEMILU", "https://kawalpemilu.org/h/"+str(id_wil)[0:2],use_container_width = True)
         x3.write(f"""<b>  PROVINSI:</b> {tps.loc[int(str(id_wil)[0:2]),'id2name']}
                  """, unsafe_allow_html=True)
         id = int(id_wil)
@@ -259,7 +259,7 @@ with tab2:
         st.subheader('Suara Kab/Kota:')
         y1, y2, y3 = st.columns([1,1,6])
         y1.link_button("🗳️ SIREKAP KPU", "https://pemilu2024.kpu.go.id/pilpres/hitung-suara/"+str(id_wil)[0:2]+"/"+str(id_wil)[0:4],use_container_width = True)
-        y2.link_button("🔢 KAWAL PEMILU", "https://kawalpemilu.org/h/"+str(id_wil),use_container_width = True)
+        y2.link_button("🔢 KAWAL PEMILU", "https://kawalpemilu.org/h/"+str(id_wil)[0:4],use_container_width = True)
         y3.write(f"""<b>  PROVINSI:</b> {tps.loc[int(str(id_wil)[0:2]),'id2name']} | 
                  <b>  KAB/KOTA:</b> {tps.loc[int(str(id_wil)[0:4]),'id2name']}
                  """, unsafe_allow_html=True)
@@ -283,7 +283,7 @@ with tab2:
         st.subheader('Suara Kecamatan:')
         z1, z2, z3 = st.columns([1,1,6])
         z1.link_button("🗳️ SIREKAP KPU", "https://pemilu2024.kpu.go.id/pilpres/hitung-suara/"+str(id_wil)[0:2]+"/"+str(id_wil)[0:4]+"/"+str(id_wil),use_container_width = True)
-        z2.link_button("🔢 KAWAL PEMILU", "https://kawalpemilu.org/h/"+str(id),use_container_width = True)
+        z2.link_button("🔢 KAWAL PEMILU", "https://kawalpemilu.org/h/"+str(id)[0:6],use_container_width = True)
         z3.write(f"""<b>  PROVINSI:</b> {tps.loc[int(str(id_wil)[0:2]),'id2name']} | 
                  <b>  KAB/KOTA:</b> {tps.loc[int(str(id_wil)[0:4]),'id2name']} |
                  <b>  KECAMATAN:</b> {tps.loc[int(str(id_wil)),'id2name']}
