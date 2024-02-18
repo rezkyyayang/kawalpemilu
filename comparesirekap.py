@@ -3,7 +3,6 @@ import requests
 import pandas as pd
 import numpy as np
 import streamlit as st
-import webbrowser
 
 def compare(id,tingkat):
     #get data from api kawalpemilu.org
@@ -172,8 +171,18 @@ with tab1:
     id = int(id)
     # Menampilkan dataframe
     df = compare(id, tingkat = 'desa')
-    df = df.style.apply(row_color, axis=1)
-    st.dataframe(df,use_container_width = True)
+    st.dataframe(df.style.apply(row_color, axis=1),use_container_width = True)
+    #Menampilkan diagram batang
+    st.subheader('Diagram Suara:')
+    c8, c9 = st.columns(2)
+    c8.subheader('🔢 Kawal Pemilu')
+    c8.bar_chart(df[['id','pas1_kawal','pas2_kawal','pas3_kawal']].rename(columns={'id': 'id_tps'}), 
+                 x='id_tps',
+                 color=['#CCFFCC','#CCCCFF','#FFCCCC'])
+    c9.subheader('🗳️ Sirekap KPU')
+    c9.bar_chart(df[['id','pas1_kpu','pas2_kpu','pas3_kpu']].rename(columns={'id': 'id_tps'}), 
+                 x='id_tps', 
+                 color=['#CCFFCC','#CCCCFF','#FFCCCC'])
 
 with tab2:
     st.header("Sirekap KPU vs KawalPemilu.org")
@@ -210,8 +219,18 @@ with tab2:
         id = int(id_wil)
         # Menampilkan dataframe
         df = compare(id_wil, tingkat = 'nas')
-        df = df.style.apply(row_color, axis=1)
-        st.dataframe(df,use_container_width = True)
+        st.dataframe(df.style.apply(row_color, axis=1),use_container_width = True)
+        #Menampilkan diagram batang
+        st.subheader('Diagram Suara:')
+        w4, w5 = st.columns(2)
+        w4.subheader('🔢 Kawal Pemilu')
+        w4.bar_chart(df[['name','pas1_kawal','pas2_kawal','pas3_kawal']].rename(columns={'name': 'provinsi'}), 
+                     x='provinsi',
+                     color=['#CCFFCC','#CCCCFF','#FFCCCC'])
+        w5.subheader('🗳️ Sirekap KPU')
+        w5.bar_chart(df[['name','pas1_kpu','pas2_kpu','pas3_kpu']].rename(columns={'name': 'provinsi'}), 
+                     x='provinsi', 
+                     color=['#CCFFCC','#CCCCFF','#FFCCCC'])
 
     with tab_provinsi:
         st.subheader('Suara Provinsi:')
@@ -223,8 +242,18 @@ with tab2:
         id = int(id_wil)
         # Menampilkan dataframe
         df = compare(id_wil, tingkat = 'prov')
-        df = df.style.apply(row_color, axis=1)
-        st.dataframe(df,use_container_width = True)
+        st.dataframe(df.style.apply(row_color, axis=1),use_container_width = True)
+        #Menampilkan diagram batang
+        st.subheader('Diagram Suara:')
+        x4, x5 = st.columns(2)
+        x4.subheader('🔢 Kawal Pemilu')
+        x4.bar_chart(df[['name','pas1_kawal','pas2_kawal','pas3_kawal']].rename(columns={'name': 'kabupaten_kota'}), 
+                     x='kabupaten_kota',
+                     color=['#CCFFCC','#CCCCFF','#FFCCCC'])
+        x5.subheader('🗳️ Sirekap KPU')
+        x5.bar_chart(df[['name','pas1_kpu','pas2_kpu','pas3_kpu']].rename(columns={'name': 'kabupaten_kota'}), 
+                     x='kabupaten_kota', 
+                     color=['#CCFFCC','#CCCCFF','#FFCCCC'])
 
     with tab_kabkot:
         st.subheader('Suara Kab/Kota:')
@@ -237,8 +266,18 @@ with tab2:
         id = int(id_wil)
         # Menampilkan dataframe
         df = compare(id_wil, tingkat = 'kab')
-        df = df.style.apply(row_color, axis=1)
-        st.dataframe(df,use_container_width = True)
+        st.dataframe(df.style.apply(row_color, axis=1),use_container_width = True)
+        #Menampilkan diagram batang
+        st.subheader('Diagram Suara:')
+        y4, y5 = st.columns(2)
+        y4.subheader('🔢 Kawal Pemilu')
+        y4.bar_chart(df[['name','pas1_kawal','pas2_kawal','pas3_kawal']].rename(columns={'name': 'kecamatan'}), 
+                     x='kecamatan',
+                     color=['#CCFFCC','#CCCCFF','#FFCCCC'])
+        y5.subheader('🗳️ Sirekap KPU')
+        y5.bar_chart(df[['name','pas1_kpu','pas2_kpu','pas3_kpu']].rename(columns={'name': 'kecamatan'}), 
+                     x='kecamatan', 
+                     color=['#CCFFCC','#CCCCFF','#FFCCCC'])
 
     with tab_kecamatan:
         st.subheader('Suara Kecamatan:')
@@ -252,8 +291,18 @@ with tab2:
         id = int(id_wil)
         # Menampilkan dataframe
         df = compare(id_wil, tingkat = 'kec')
-        df = df.style.apply(row_color, axis=1)
-        st.dataframe(df,use_container_width = True)
+        st.dataframe(df.style.apply(row_color, axis=1),use_container_width = True)
+        #Menampilkan diagram batang
+        st.subheader('Diagram Suara:')
+        z4, z5 = st.columns(2)
+        z4.subheader('🔢 Kawal Pemilu')
+        z4.bar_chart(df[['name','pas1_kawal','pas2_kawal','pas3_kawal']].rename(columns={'name': 'desa_kelurahan'}), 
+                     x='desa_kelurahan',
+                     color=['#CCFFCC','#CCCCFF','#FFCCCC'])
+        z5.subheader('🗳️ Sirekap KPU')
+        z5.bar_chart(df[['name','pas1_kpu','pas2_kpu','pas3_kpu']].rename(columns={'name': 'desa_kelurahan'}), 
+                     x='desa_kelurahan', 
+                     color=['#CCFFCC','#CCCCFF','#FFCCCC'])
 
 
 with tab3:
@@ -318,4 +367,3 @@ with tab3:
                      """, unsafe_allow_html= True)
         st.link_button("📄 Unduh Visi Misi Lengkap", "https://drive.google.com/file/d/1ey8BwGJhDNcZXXSCkHgn621KdWRRbNWN/view?usp=sharing",use_container_width = True)
         
-
