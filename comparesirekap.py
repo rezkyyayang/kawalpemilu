@@ -309,11 +309,40 @@ with tab3:
     st.header("Profil Pasangan Capres-Cawapres")
     st.markdown("Dokumentasi: [**github.com/rezkyyayang/kawalpemilu**](https://github.com/rezkyyayang/kawalpemilu)")
 
+    #Rekapitulasi Sirekap KPU
+    kpu = requests.get("https://sirekap-obj-data.kpu.go.id/pemilu/hhcw/ppwp.json").json()['chart']
+    kpu_pas1 = kpu['100025']
+    kpu_pas2 = kpu['100026']
+    kpu_pas3 = kpu['100027']
+    kpu_tot = kpu['100025'] + kpu['100026'] + kpu['100027']
+
+    #Rekapitulasi Kawal Pemilu
+    kawal = requests.get("https://kp24-fd486.et.r.appspot.com/h?id=").json()['result']['aggregated']
+    kawal_pas1 = 0
+    kawal_pas2 = 0
+    kawal_pas3 = 0
+    for lokasi in kawal.values():
+        for entry in lokasi:
+            kawal_pas1 += entry['pas1']
+            kawal_pas2 += entry['pas2']
+            kawal_pas3 += entry['pas3']
+    kawal_tot = kawal_pas1 + kawal_pas2 + kawal_pas3
+    
     c8, c9, c10 = st.columns(3)
 
     with c8:
         st.header("01")
-        st.image("https://asset.kompas.com/data/2023/10/25/kompascom/widget/bacapres/images/paslon/Anies-Muhaimin.png", width=250)
+        c8a, c8b = st.columns([4,2])
+        c8a.image("https://asset.kompas.com/data/2023/10/25/kompascom/widget/bacapres/images/paslon/Anies-Muhaimin.png", use_column_width=True)
+        with c8b:
+            st.metric(label=":ballot_box_with_ballot: Sirekap KPU", 
+                      value=str(round((kpu_pas1/kpu_tot)*100,2))+'%', 
+                      delta="{:,}".format(kpu_pas1),
+                      delta_color = 'off')
+            st.metric(label=":1234: Kawal Pemilu", 
+                      value=str(round((kawal_pas1/kawal_tot)*100,2))+'%', 
+                      delta="{:,}".format(kawal_pas1),
+                      delta_color = 'off')
         st.subheader("H. ANIES RASYID BASWEDAN, Ph.D. - Dr. (H.C.) H. A. MUHAIMIN ISKANDAR")
         with st.expander("Lihat Visi Misi Paslon 01"):
             st.write("<b>VISI</b> <br> Indonesia Adil Makmur Untuk Semua", unsafe_allow_html= True)
@@ -332,7 +361,17 @@ with tab3:
     
     with c9:
         st.header("02")
-        st.image("https://asset.kompas.com/data/2023/10/25/kompascom/widget/bacapres/images/paslon/Prabowo-Gibran.png", width=250)
+        c9a, c9b = st.columns([4,2])
+        c9a.image("https://asset.kompas.com/data/2023/10/25/kompascom/widget/bacapres/images/paslon/Prabowo-Gibran.png", use_column_width=True)
+        with c9b:
+            st.metric(label=":ballot_box_with_ballot: Sirekap KPU", 
+                      value=str(round((kpu_pas2/kpu_tot)*100,2))+'%', 
+                      delta="{:,}".format(kpu_pas2),
+                      delta_color = 'off')
+            st.metric(label=":1234: Kawal Pemilu", 
+                      value=str(round((kawal_pas2/kawal_tot)*100,2))+'%', 
+                      delta="{:,}".format(kawal_pas2),
+                      delta_color = 'off')
         st.subheader("H. PRABOWO SUBIANTO - GIBRAN RAKABUMING RAKA")
         with st.expander("Lihat Visi Misi Paslon 02"):
             st.write("<b>VISI</b> <br> Bersama Indonesia Maju Menuju Indonesia Emas 2045", unsafe_allow_html= True)
@@ -351,7 +390,17 @@ with tab3:
     
     with c10:
         st.header("03")
-        st.image("https://asset.kompas.com/data/2023/10/25/kompascom/widget/bacapres/images/paslon/Ganjar-Mahfud.png", width=250)
+        c10a, c10b = st.columns([4,2])
+        c10a.image("https://asset.kompas.com/data/2023/10/25/kompascom/widget/bacapres/images/paslon/Ganjar-Mahfud.png", use_column_width=True)
+        with c10b:
+            st.metric(label=":ballot_box_with_ballot: Sirekap KPU", 
+                      value=str(round((kpu_pas3/kpu_tot)*100,2))+'%', 
+                      delta="{:,}".format(kpu_pas3),
+                      delta_color = 'off')
+            st.metric(label=":1234: Kawal Pemilu", 
+                      value=str(round((kawal_pas3/kawal_tot)*100,2))+'%', 
+                      delta="{:,}".format(kawal_pas3),
+                      delta_color = 'off')   
         st.subheader("H. GANJAR PRANOWO, S.H., M.I.P. - Prof. Dr. H. M. MAHFUD MD")
         with st.expander("Lihat Visi Misi Paslon 03"):
             st.write("<b>VISI</b> <br> Gerak Cepat Menuju Indonesia Unggul", unsafe_allow_html= True)
